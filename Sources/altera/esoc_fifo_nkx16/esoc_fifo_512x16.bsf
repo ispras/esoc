@@ -4,113 +4,117 @@ editor if you plan to continue editing the block that represents it in
 the Block Editor! File corruption is VERY likely to occur.
 */
 /*
-Copyright (C) 1991-2008 Altera Corporation
-Your use of Altera Corporation's design tools, logic functions 
+Copyright (C) 2018  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
 and other software and tools, and its AMPP partner logic 
 functions, and any output files from any of the foregoing 
 (including device programming or simulation files), and any 
 associated documentation or information are expressly subject 
-to the terms and conditions of the Altera Program License 
-Subscription Agreement, Altera MegaCore Function License 
-Agreement, or other applicable license agreement, including, 
-without limitation, that your use is for the sole purpose of 
-programming logic devices manufactured by Altera and sold by 
-Altera or its authorized distributors.  Please refer to the 
-applicable agreement for further details.
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details.
 */
-(header "symbol" (version "1.1"))
+(header "symbol" (version "1.2"))
 (symbol
-	(rect 0 0 160 184)
-	(text "esoc_fifo_512x16" (rect 30 1 148 17)(font "Arial" (font_size 10)))
-	(text "inst" (rect 8 168 25 180)(font "Arial" ))
+	(rect 0 0 176 224)
+	(text "esoc_fifo_512x16" (rect 36 0 161 16)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 209 26 220)(font "Arial" ))
 	(port
-		(pt 0 32)
+		(pt 0 48)
 		(input)
-		(text "data[15..0]" (rect 0 0 60 14)(font "Arial" (font_size 8)))
-		(text "data[15..0]" (rect 20 26 71 39)(font "Arial" (font_size 8)))
-		(line (pt 0 32)(pt 16 32)(line_width 3))
-	)
-	(port
-		(pt 0 56)
-		(input)
-		(text "wrreq" (rect 0 0 35 14)(font "Arial" (font_size 8)))
-		(text "wrreq" (rect 20 50 45 63)(font "Arial" (font_size 8)))
-		(line (pt 0 56)(pt 16 56)(line_width 1))
+		(text "data[15..0]" (rect 0 0 61 13)(font "Arial" (font_size 8)))
+		(text "data[15..0]" (rect 20 42 72 54)(font "Arial" (font_size 8)))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
 	)
 	(port
 		(pt 0 72)
 		(input)
-		(text "wrclk" (rect 0 0 31 14)(font "Arial" (font_size 8)))
-		(text "wrclk" (rect 26 66 48 79)(font "Arial" (font_size 8)))
-		(line (pt 0 72)(pt 16 72)(line_width 1))
+		(text "wrreq" (rect 0 0 33 13)(font "Arial" (font_size 8)))
+		(text "wrreq" (rect 20 66 49 78)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 16 72))
 	)
 	(port
-		(pt 0 104)
+		(pt 0 88)
 		(input)
-		(text "rdreq" (rect 0 0 30 14)(font "Arial" (font_size 8)))
-		(text "rdreq" (rect 20 98 44 111)(font "Arial" (font_size 8)))
-		(line (pt 0 104)(pt 16 104)(line_width 1))
+		(text "wrclk" (rect 0 0 31 13)(font "Arial" (font_size 8)))
+		(text "wrclk" (rect 20 82 46 94)(font "Arial" (font_size 8)))
+		(line (pt 0 88)(pt 16 88))
 	)
 	(port
 		(pt 0 120)
 		(input)
-		(text "rdclk" (rect 0 0 27 14)(font "Arial" (font_size 8)))
-		(text "rdclk" (rect 26 114 47 127)(font "Arial" (font_size 8)))
-		(line (pt 0 120)(pt 16 120)(line_width 1))
+		(text "rdreq" (rect 0 0 30 13)(font "Arial" (font_size 8)))
+		(text "rdreq" (rect 20 114 47 126)(font "Arial" (font_size 8)))
+		(line (pt 0 120)(pt 16 120))
 	)
 	(port
-		(pt 0 160)
+		(pt 0 136)
 		(input)
-		(text "aclr" (rect 0 0 21 14)(font "Arial" (font_size 8)))
-		(text "aclr" (rect 20 154 37 167)(font "Arial" (font_size 8)))
-		(line (pt 0 160)(pt 16 160)(line_width 1))
+		(text "rdclk" (rect 0 0 29 13)(font "Arial" (font_size 8)))
+		(text "rdclk" (rect 20 130 44 142)(font "Arial" (font_size 8)))
+		(line (pt 0 136)(pt 16 136))
 	)
 	(port
-		(pt 160 40)
-		(output)
-		(text "wrfull" (rect 0 0 33 14)(font "Arial" (font_size 8)))
-		(text "wrfull" (rect 113 34 138 47)(font "Arial" (font_size 8)))
-		(line (pt 160 40)(pt 144 40)(line_width 1))
+		(pt 0 176)
+		(input)
+		(text "aclr" (rect 0 0 22 13)(font "Arial" (font_size 8)))
+		(text "aclr" (rect 20 170 38 182)(font "Arial" (font_size 8)))
+		(line (pt 0 176)(pt 16 176))
 	)
 	(port
-		(pt 160 72)
+		(pt 176 56)
 		(output)
-		(text "wrusedw[8..0]" (rect 0 0 84 14)(font "Arial" (font_size 8)))
-		(text "wrusedw[8..0]" (rect 69 66 132 79)(font "Arial" (font_size 8)))
-		(line (pt 160 72)(pt 144 72)(line_width 3))
+		(text "wrfull" (rect 0 0 30 13)(font "Arial" (font_size 8)))
+		(text "wrfull" (rect 132 50 158 62)(font "Arial" (font_size 8)))
+		(line (pt 176 56)(pt 160 56))
 	)
 	(port
-		(pt 160 96)
+		(pt 176 88)
 		(output)
-		(text "q[15..0]" (rect 0 0 42 14)(font "Arial" (font_size 8)))
-		(text "q[15..0]" (rect 105 90 141 103)(font "Arial" (font_size 8)))
-		(line (pt 160 96)(pt 144 96)(line_width 3))
+		(text "wrusedw[8..0]" (rect 0 0 79 13)(font "Arial" (font_size 8)))
+		(text "wrusedw[8..0]" (rect 91 82 159 94)(font "Arial" (font_size 8)))
+		(line (pt 176 88)(pt 160 88)(line_width 3))
 	)
 	(port
-		(pt 160 120)
+		(pt 176 112)
 		(output)
-		(text "rdempty" (rect 0 0 46 14)(font "Arial" (font_size 8)))
-		(text "rdempty" (rect 102 114 140 127)(font "Arial" (font_size 8)))
-		(line (pt 160 120)(pt 144 120)(line_width 1))
+		(text "q[15..0]" (rect 0 0 43 13)(font "Arial" (font_size 8)))
+		(text "q[15..0]" (rect 121 106 158 118)(font "Arial" (font_size 8)))
+		(line (pt 176 112)(pt 160 112)(line_width 3))
 	)
 	(port
-		(pt 160 136)
+		(pt 176 136)
 		(output)
-		(text "rdusedw[8..0]" (rect 0 0 80 14)(font "Arial" (font_size 8)))
-		(text "rdusedw[8..0]" (rect 73 130 135 143)(font "Arial" (font_size 8)))
-		(line (pt 160 136)(pt 144 136)(line_width 3))
+		(text "rdempty" (rect 0 0 48 13)(font "Arial" (font_size 8)))
+		(text "rdempty" (rect 119 130 160 142)(font "Arial" (font_size 8)))
+		(line (pt 176 136)(pt 160 136))
+	)
+	(port
+		(pt 176 152)
+		(output)
+		(text "rdusedw[8..0]" (rect 0 0 76 13)(font "Arial" (font_size 8)))
+		(text "rdusedw[8..0]" (rect 93 146 159 158)(font "Arial" (font_size 8)))
+		(line (pt 176 152)(pt 160 152)(line_width 3))
 	)
 	(drawing
-		(text "16 bits x 512 words" (rect 63 156 144 168)(font "Arial" ))
-		(line (pt 16 16)(pt 144 16)(line_width 1))
-		(line (pt 144 16)(pt 144 168)(line_width 1))
-		(line (pt 144 168)(pt 16 168)(line_width 1))
-		(line (pt 16 168)(pt 16 16)(line_width 1))
-		(line (pt 16 84)(pt 144 84)(line_width 1))
-		(line (pt 16 148)(pt 144 148)(line_width 1))
-		(line (pt 16 66)(pt 22 72)(line_width 1))
-		(line (pt 22 72)(pt 16 78)(line_width 1))
-		(line (pt 16 114)(pt 22 120)(line_width 1))
-		(line (pt 22 120)(pt 16 126)(line_width 1))
+		(text "16 bits x 512 words" (rect 79 174 240 358)(font "Arial" ))
+		(line (pt 16 100)(pt 160 100))
+		(line (pt 16 164)(pt 160 164))
+		(line (pt 16 32)(pt 160 32))
+		(line (pt 160 32)(pt 160 209))
+		(line (pt 160 209)(pt 16 209))
+		(line (pt 16 209)(pt 16 32))
+		(line (pt 0 0)(pt 177 0))
+		(line (pt 177 0)(pt 177 227))
+		(line (pt 0 227)(pt 177 227))
+		(line (pt 0 0)(pt 0 227))
+		(line (pt 0 0)(pt 0 0))
+		(line (pt 0 0)(pt 0 0))
+		(line (pt 0 0)(pt 0 0))
+		(line (pt 0 0)(pt 0 0))
 	)
 )
