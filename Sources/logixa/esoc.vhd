@@ -203,23 +203,23 @@ architecture structure of esoc is
       search_sof          : in     std_logic);
   end component esoc_search_engine;
 
-  component esoc_pll1_c3
+  component esoc_pll1_c4
     port(
       inclk0 : in     STD_LOGIC := '0';
       c0     : out    STD_LOGIC;
       c1     : out    STD_LOGIC;
       c2     : out    STD_LOGIC;
       locked : out    STD_LOGIC);
-  end component esoc_pll1_c3;
+  end component esoc_pll1_c4;
 
-  component esoc_pll2_c3
+  component esoc_pll2_c4
     port(
       inclk0 : in     STD_LOGIC := '0';
       c0     : out    STD_LOGIC;
       locked : out    STD_LOGIC;
       c1     : out    STD_LOGIC;
       c2     : out    STD_LOGIC);
-  end component esoc_pll2_c3;
+  end component esoc_pll2_c4;
 
   component esoc_rom_2kx32
     port(
@@ -365,7 +365,7 @@ begin
       search_result_av    => search_result_av,
       search_sof          => search_sof);
 
-  u1: esoc_pll1_c3
+  u1: esoc_pll1_c4
     port map(
       inclk0 => esoc_clk,
       c0     => clk_control,
@@ -373,7 +373,7 @@ begin
       c2     => clk_data,
       locked => pll1_locked);
 
-  u3: esoc_pll2_c3
+  u3: esoc_pll2_c4
     port map(
       inclk0 => esoc_clk,
       c0     => clk_rgmii_125m,
