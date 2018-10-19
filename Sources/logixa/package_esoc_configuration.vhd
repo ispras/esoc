@@ -22,14 +22,14 @@ constant  esoc_release: integer                 := 0;
 
 -- Mode of operation
 type esoc_modes is (normal, simulation);
-constant esoc_mode: esoc_modes                  := simulation;
+constant esoc_mode: esoc_modes                  := normal;
 
 -- Boot from ROM
 type esoc_brom_modes is (disabled, enabled);
-constant esoc_brom_mode: esoc_brom_modes        := disabled;
+constant esoc_brom_mode: esoc_brom_modes        := enabled;
 
 -- Port count configuration (maximum is 16)
-constant  esoc_port_count: integer              := 8;
+constant  esoc_port_count: integer              := 2;
 
 ---------------------------------------------------------------------------------------------------------------
 -- Package declaration: ESoC Address Mapping
