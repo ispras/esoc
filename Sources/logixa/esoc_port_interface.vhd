@@ -188,10 +188,10 @@ architecture structure of esoc_port_interface is
       ff_tx_clk     : in     STD_LOGIC;
       ff_rx_rdy     : in     STD_LOGIC;
       ff_rx_clk     : in     STD_LOGIC;
-      address       : in     STD_LOGIC_VECTOR(7 downto 0);
-      read          : in     STD_LOGIC;
-      writedata     : in     STD_LOGIC_VECTOR(31 downto 0);
-      write         : in     STD_LOGIC;
+      reg_addr      : in     STD_LOGIC_VECTOR(7 downto 0);
+      reg_rd        : in     STD_LOGIC;
+      reg_data_in   : in     STD_LOGIC_VECTOR(31 downto 0);
+      reg_wr        : in     STD_LOGIC;
       clk           : in     STD_LOGIC;
       reset         : in     STD_LOGIC;
       rgmii_in      : in     STD_LOGIC_VECTOR(3 downto 0);
@@ -214,8 +214,8 @@ architecture structure of esoc_port_interface is
       rx_err_stat   : out    STD_LOGIC_VECTOR(17 downto 0);
       rx_frm_type   : out    STD_LOGIC_VECTOR(3 downto 0);
       ff_rx_dsav    : out    STD_LOGIC;
-      readdata      : out    STD_LOGIC_VECTOR(31 downto 0);
-      waitrequest   : out    STD_LOGIC;
+      reg_data_out  : out    STD_LOGIC_VECTOR(31 downto 0);
+      reg_busy      : out    STD_LOGIC;
       rgmii_out     : out    STD_LOGIC_VECTOR(3 downto 0);
       tx_control    : out    STD_LOGIC;
       ena_10        : out    STD_LOGIC;
@@ -306,10 +306,10 @@ begin
       ff_tx_clk     => clk_control,
       ff_rx_rdy     => ff_rx_rdy,
       ff_rx_clk     => clk_control,
-      address       => mac_address,
-      read          => mac_rd,
-      writedata     => mac_wrdata,
-      write         => mac_wr,
+      reg_addr      => mac_address,
+      reg_rd        => mac_rd,
+      reg_data_in   => mac_wrdata,
+      reg_wr        => mac_wr,
       clk           => clk_control,
       reset         => reset,
       rgmii_in      => rgmii_rxd,
@@ -332,8 +332,8 @@ begin
       rx_err_stat   => rx_err_stat,
       rx_frm_type   => rx_frm_type,
       ff_rx_dsav    => ff_rx_dsav,
-      readdata      => mac_rddata,
-      waitrequest   => mac_wait,
+      reg_data_out  => mac_rddata,
+      reg_busy      => mac_wait,
       rgmii_out     => rgmii_txd,
       tx_control    => rgmii_txctl,
       ena_10        => ena_10,
