@@ -26,7 +26,7 @@ constant esoc_mode: esoc_modes                  := normal;
 
 -- Boot from ROM
 type esoc_brom_modes is (disabled, enabled);
-constant esoc_brom_mode: esoc_brom_modes        := enabled;
+constant esoc_brom_mode: esoc_brom_modes        := disabled;
 
 -- Port count configuration (maximum is 16)
 constant  esoc_port_count: integer              := 2;
