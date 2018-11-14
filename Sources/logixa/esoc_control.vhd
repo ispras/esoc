@@ -277,7 +277,9 @@ registers:  process(clk_control, reset)
                 
                 -- continu if memory space of this entity is addressed
                 if to_integer(unsigned(ctrl_address_i)) >= esoc_control_base and to_integer(unsigned(ctrl_address_i)) < esoc_control_base + esoc_control_size then
-                    ctrl_bus_enable_i <= '1';
+                    if ctrl_rd_i = '1' or ctrl_wr_i = '1' then
+                        ctrl_bus_enable_i <= '1';
+                    end if;
 
 	                --
 	                -- READ CYCLE started, unit addressed?
