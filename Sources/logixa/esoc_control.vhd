@@ -92,6 +92,8 @@ signal ctrl_rddata_i: std_logic_vector(31 downto 0);
 signal ctrl_wrdata_i: std_logic_vector(31 downto 0);
 signal ctrl_address_i: std_logic_vector(ctrl_address'high downto 0);
 signal ctrl_wait_i: std_logic;
+signal ctrl_bus_enable_i : std_logic;
+signal ctrl_bus_enable : std_logic;
 
 constant brom_wait_count_init: integer := 31;
 signal brom_wait_count: integer range brom_wait_count_init downto 0;
@@ -238,10 +240,23 @@ ctrlbus:  process(clk_control, reset)
           ctrl_wrdata   <= ctrl_wrdata_i;
           
           -- use eSOC control bus signals to drive eSOC control interface outputs
-          esoc_data   <= ctrl_rddata 	  when ctrl_wait   = '0' and ctrl_rdwr_i = '0'  else 
-                         ctrl_rddata_i  when ctrl_wait_i = '0' and ctrl_rdwr_i = '0'  else (others => 'Z');
-                         
-          esoc_wait 	<= '0' 					  when ctrl_wait   = '0' or  ctrl_wait_i = '0'   else 'Z';
+          esoc_data <= ctrl_rddata_i  when ctrl_bus_enable_i = '1' and ctrl_rdwr_i = '0' else
+                       ctrl_rddata    when ctrl_bus_enable   = '1' and ctrl_rdwr_i = '0' else (others => 'Z');
+          esoc_wait <= ctrl_wait_i    when ctrl_bus_enable_i = '1' else
+                       ctrl_wait      when ctrl_bus_enable   = '1' else '1';
+
+external: process(clk_control, reset) begin
+    if reset = '1' then
+        ctrl_bus_enable <= '0';
+    elsif clk_control'event and clk_control = '1' then
+        ctrl_bus_enable <= '0';
+        if to_integer(unsigned(ctrl_address_i)) < esoc_control_base or to_integer(unsigned(ctrl_address_i)) >= esoc_control_base + esoc_control_size then
+            if ctrl_rd_i = '1' or ctrl_wr_i = '1' then
+                ctrl_bus_enable <= '1';
+            end if;
+        end if;
+    end if;
+end process;
 
                  
 --=============================================================================================================
@@ -254,12 +269,16 @@ registers:  process(clk_control, reset)
                 reg_ctrl_scratch_dat <= reg_ctrl_scratch_rst;
                 ctrl_wait_i <= '1';
                 ctrl_rddata_i <= (others => '0');
+                ctrl_bus_enable_i <= '0';
                               
               elsif clk_control'event and clk_control = '1' then
               	ctrl_wait_i <= '1';
+                ctrl_bus_enable_i <= '0';
                 
                 -- continu if memory space of this entity is addressed
                 if to_integer(unsigned(ctrl_address_i)) >= esoc_control_base and to_integer(unsigned(ctrl_address_i)) < esoc_control_base + esoc_control_size then
+                    ctrl_bus_enable_i <= '1';
+
 	                --
 	                -- READ CYCLE started, unit addressed?
 	                --
