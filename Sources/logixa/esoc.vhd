@@ -33,6 +33,7 @@ entity esoc is
     esoc_areset        : in     std_logic;
     esoc_boot_complete : out    std_logic;
     esoc_clk           : in     std_logic;
+    esoc_clk_25m       : in     std_logic;
     esoc_cs            : in     std_logic;
     esoc_data          : inout  std_logic_vector(31 downto 0);
     esoc_mdc           : out    std_logic_vector(esoc_port_count-1 downto 0);
@@ -375,7 +376,7 @@ begin
 
   u3: esoc_pll2_c4
     port map(
-      inclk0 => esoc_clk,
+      inclk0 => esoc_clk_25m,
       c0     => clk_rgmii_125m,
       locked => pll2_locked,
       c1     => clk_rgmii_25m,
