@@ -71,6 +71,7 @@ signal outbound_info_counter: integer range 2**esoc_outbound_info_length_size-1 
 signal outbound_data_write_i: std_logic;
 
 signal outbound_vlan_member_check: std_logic;
+signal check_last_write: std_logic;
 
 begin
 
@@ -97,6 +98,7 @@ dbus: process(clk_data, reset)
            
           outbound_vlan_id      <= (others => '0');
           outbound_vlan_member_check <= '0';
+          check_last_write      <= '0';
           
           outbound_done_cnt     <= '0';  
           outbound_drop_cnt     <= '0';
@@ -123,6 +125,7 @@ dbus: process(clk_data, reset)
                                   -- get VLAN ID of packet and check whether this port is member of the VLAN or not
                                   outbound_vlan_id            <= data_i(esoc_dbus_packet_info_vlan_tci+11 downto esoc_dbus_packet_info_vlan_tci);
                                   outbound_vlan_member_check  <= '0';
+                                  check_last_write            <= '0';
                                   outbound_info_counter       <= 0;
                                   outbound_info(esoc_outbound_info_vlan_flag) <= data_i(esoc_dbus_packet_info_vlan_flag);
                                   data_transfer_state         <= transfer;
@@ -147,17 +150,22 @@ dbus: process(clk_data, reset)
                               -- calculate stored bytes when packet storage is aborted before packet is complete due to an error (data FIFO 
                               -- full or port not member of VLAN)
                               else
-                                outbound_data <= data_i;
-                                outbound_data_write_i <= '1';
-                                outbound_info_counter <= outbound_info_counter + 8;
-                                
-                                -- end of packet, store length and flags in info FIFO
-                                if data_eof_i = '1' then
+                                -- everything ok, store length and flags in info FIFO
+                                if check_last_write = '1' then
                                   outbound_info(esoc_outbound_info_length + esoc_outbound_info_length_size -1 downto esoc_outbound_info_length) <= std_logic_vector(to_unsigned(outbound_info_length,esoc_outbound_info_length_size));
                                   outbound_info(esoc_outbound_info_error_flag) <= '0';
                                   outbound_info_write   <= '1';
                                   outbound_done_cnt     <= '1';
                                   data_transfer_state   <= idle;
+                                else
+                                  outbound_data <= data_i;
+                                  outbound_data_write_i <= '1';
+                                  outbound_info_counter <= outbound_info_counter + 8;
+
+                                  -- end of packet, check last write
+                                  if data_eof_i = '1' then
+                                    check_last_write <= '1';
+                                  end if;
                                 end if;
                               end if;
                               
