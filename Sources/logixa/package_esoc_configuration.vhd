@@ -63,11 +63,11 @@ constant  esoc_port_base_offset                 : integer := 2048;
 ---------------------------------------------------------------------------------------------------------------
 -- Configuration of clock and clock enables 
 constant clk_control_freq                       : integer := 50000000;
-constant clk_data_freq                          : integer := 100000000;
-constant clk_search_freq                        : integer := 50000000;
+constant clk_data_freq                          : integer := 150000000;
+constant clk_search_freq                        : integer := 75000000;
 
-constant clk_search_en_div_1s                   : integer := clk_search_freq/1;         -- 1s enable    --> 50MHz / 1Hz
-constant clk_search_en_div_1s_sim               : integer := clk_search_freq/100000;    -- 10us enable  --> 50MHz / 100kHz
+constant clk_search_en_div_1s                   : integer := clk_search_freq/1;         -- 1s enable    --> 75MHz / 1Hz
+constant clk_search_en_div_1s_sim               : integer := clk_search_freq/100000;    -- 10us enable  --> 75MHz / 100kHz
 
 -- Number of metastability flip flops
 constant  esoc_meta_ffs                         : integer := 2;
