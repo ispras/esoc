@@ -65,8 +65,6 @@ signal search_sof_o: std_logic;
 signal search_eof_o: std_logic;
 signal search_key_o: std_logic_vector(search_key'high downto 0);
 
-signal inbound_header_empty_i: std_logic;
-
 begin
 
 -- control the shared bus to the search engine
@@ -82,8 +80,7 @@ debug:      process(clk_search, reset)
             begin
               if reset = '1' then
                 inbound_header_read    <= '0';
-                inbound_header_empty_i <= '0';
-                
+
                 search_req          <= '0';
                 search_sof_o        <= '0';
                 search_eof_o        <= '0';
@@ -99,57 +96,48 @@ debug:      process(clk_search, reset)
                 
               elsif clk_search'event and clk_search = '1' then
                 -- reset one clock active signals
+                search_sof_o        <= '0';
                 search_eof_o        <= '0';
                 search_done_cnt     <= '0';
                 search_drop_cnt     <= '0';
                 search_write        <= '0';
                 inbound_header_read <= '0';            
                 
-                -- delay the empty signal to proces the VLAN membership of the first packet correctly. When the header 
-                -- data of first packet is written in de header FIFO the empty signal deasserts, but in parallel (outside 
-                -- this entity) the VLAN ID RAM is addressed. This entity detects the deasserted EMTPY signal and expects 
-                -- the corresponding VLAN membership info from the VLAN ID RAM, which is not available at that time!
-                -- This is only applicable if the first header in the FIFO is from a tagged packet and the EMPTY latency of the
-                -- FIFO is 0, the latter is not the case for Altera, so you can skip this delay by using the inbound_header_empty
-                -- iso. the inbound_header_empty_i signal in the search_state idle .... check simulation!
-                inbound_header_empty_i <= inbound_header_empty;
-                
                 case search_state is
-                  when idle             =>  -- used to insert a clock delay
-                                            search_state <= send_key_1;
-                  
-                  when send_key_1       =>  -- check for new header data,new header data means new packet is coming or already available
+                  when idle             =>  -- check for new header data,new header data means new packet is coming or already available
                                             if inbound_header_empty = '0' then
-                                              -- Is the inbound port member of the VID of the tagged packet or 
-                                              -- is the packet untagged and does the switch use the port default VID?
-                                              if inbound_header(esoc_inbound_header_vlan_flag) = '0' or inbound_vlan_member = "1" then
-                                                -- Request bus to the search engine, prepare to transfer VID and DA
-                                                search_req   <= '1';
+                                                -- Is the inbound port member of the VID of the tagged packet or 
+                                                -- is the packet untagged and does the switch use the port default VID?
+                                                if inbound_header(esoc_inbound_header_vlan_flag) = '0' or inbound_vlan_member = "1" then
+                                                    -- Request bus to the search engine
+                                                    search_req   <= '1';
+                                                    search_state <= send_key_1;
+
+                                                -- Packet is tagged and the inbound port is not member of the packet VID 
+                                                else
+                                                    -- Write destination port (none) and acknowledge header data
+                                                    search_data         <= (others => '0');
+                                                    search_write        <= '1';
+                                                    inbound_header_read <= '1';
+                                                    search_drop_cnt     <= '1';
+                                                    search_state        <= idle;
+                                                end if;
+                                            end if;
+
+                  when send_key_1       =>  if search_gnt_wr = '1' then
+                                                -- Access granted, prepare to transfer VID and DA
                                                 search_sof_o <= '1';
                                                 search_key_o(esoc_search_bus_vlan+11 downto esoc_search_bus_vlan) <= inbound_header(esoc_inbound_header_vlan+11 downto esoc_inbound_header_vlan);
                                                 search_key_o(esoc_search_bus_mac+47 downto esoc_search_bus_mac)   <= inbound_header(esoc_inbound_header_dmac_lo+47 downto esoc_inbound_header_dmac_lo);
                                                 search_state <= send_key_2;
-                                                
-                                              -- Packet is tagged and the inbound port is not member of the packet VID 
-                                              else
-                                                -- Write destination port (none) and acknowledge header data
-                                                search_data         <= (others => '0');
-                                                search_write        <= '1';
-                                                inbound_header_read <= '1';
-                                                search_drop_cnt     <= '1';
-                                                search_state        <= idle;
-                                              end if;
                                             end if;
                   
-                  when send_key_2       =>  -- VID and DA Address accepted when granted, provide Port Number and SA Address for learning process
-                                            if search_gnt_wr = '1' then
-                                              search_key_o(esoc_search_bus_sport+15 downto esoc_search_bus_sport) <= (others => '0');
-                                              search_key_o(esoc_search_bus_sport+esoc_port_nr) <= '1';
-                                              search_key_o(esoc_search_bus_mac+47 downto esoc_search_bus_mac) <= inbound_header(esoc_inbound_header_smac_lo+47 downto esoc_inbound_header_smac_lo);
-                                              search_sof_o <= '0';
-                                              inbound_header_read <= '1';
-                                              search_state <= wait_for_result;
-                                            end if;
+                  when send_key_2       =>  -- VID and DA Address accepted, provide Port Number and SA Address for learning process
+                                            search_key_o(esoc_search_bus_sport+15 downto esoc_search_bus_sport) <= (others => '0');
+                                            search_key_o(esoc_search_bus_sport+esoc_port_nr) <= '1';
+                                            search_key_o(esoc_search_bus_mac+47 downto esoc_search_bus_mac) <= inbound_header(esoc_inbound_header_smac_lo+47 downto esoc_inbound_header_smac_lo);
+                                            inbound_header_read <= '1';
+                                            search_state <= wait_for_result;
                                         
                   when wait_for_result  =>  -- Wait for result from search engine
                                             if search_result_av = '1' then
@@ -161,7 +149,7 @@ debug:      process(clk_search, reset)
                                               search_done_cnt     <= '1';  
                                               search_req          <= '0';
                                               search_eof_o        <= '1';
-                                              search_state        <= send_key_1;
+                                              search_state        <= idle;
                                             end if;
                   
                   when others           =>  search_state <= idle;
