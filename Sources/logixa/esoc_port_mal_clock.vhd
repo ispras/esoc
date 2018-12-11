@@ -87,7 +87,7 @@ set_10 <= '0';
 set_1000 <= '0';
 
 -- Create speed select signals
-speed_setting <=  s1000m when reset = '1'  else 
+speed_setting <=  s100m when reset = '1'  else 
                   s10m when eth_mode = '0' and ena_10 = '1' else
                   s100m when eth_mode = '0' and ena_10 = '0' else
                   s1000m;
@@ -153,7 +153,7 @@ clkswitch:  process (clk_control, reset)
                     clk125_stopped_reg <= (others => clk125m_reset);
                     clk25_stopped_reg  <= (others => clk25m_reset);
                     clk2m5_stopped_reg <= (others => clk2m5_reset);
-                    speed_current      <= s1000m;
+                    speed_current      <= s100m;
                     switch_state       <= idle;
                     
                 elsif clk_control'event and clk_control = '1' then
