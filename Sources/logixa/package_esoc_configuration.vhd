@@ -103,12 +103,13 @@ constant  esoc_inbound_info_vlan_flag           : integer := 0;                 
 
 -- Entity ESoC Port Processor[Outbound Control] to ESoC Port Mal[Outbound]
 -- Record stored in Info Fifo format (start positions)
-constant  esoc_outbound_info_length             : integer := 4;                         -- Position of packet length in info fifo entry
+constant  esoc_outbound_info_length             : integer := 20;                        -- Position of packet length in info fifo entry
 constant  esoc_outbound_info_length_size        : integer := 12;                        -- Size of packet length in info fifo entry
+constant  esoc_outbound_info_vlan_tci           : integer := 4;                         -- Position of vlan tag in info fifo entry, length is 16 bits
 constant  esoc_outbound_info_unused3_flag       : integer := 3;                         -- Position of ... flag in info fifo entry, length is 1 bit
 constant  esoc_outbound_info_unused2_flag       : integer := 2;                         -- Position of ... flag in info fifo entry, length is 1 bit
-constant  esoc_outbound_info_vlan_flag          : integer := 1;                         -- Position of vlan tagged packet flag in info fifo entry, length is 1 bit
-constant  esoc_outbound_info_error_flag         : integer := 0;                         -- Position of error flag in info fifo entry, length is 1 bit
+constant  esoc_outbound_info_error_flag         : integer := 1;                         -- Position of error flag in info fifo entry, length is 1 bit
+constant  esoc_outbound_info_vlan_flag          : integer := 0;                         -- Position of vlan tagged packet flag in info fifo entry, length is 1 bit
 
 -- Entity ESoC Port Processor[Inbound Control] to ESoC Port Processor[Outbound Control]
 -- Record prepended for each packet transferred over data bus (start positions)

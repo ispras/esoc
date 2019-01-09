@@ -127,6 +127,7 @@ dbus: process(clk_data, reset)
                                   outbound_vlan_member_check  <= '0';
                                   check_last_write            <= '0';
                                   outbound_info_counter       <= 0;
+                                  outbound_info(esoc_outbound_info_vlan_tci+15 downto esoc_outbound_info_vlan_tci) <= data_i(esoc_dbus_packet_info_vlan_tci+15 downto esoc_dbus_packet_info_vlan_tci);
                                   outbound_info(esoc_outbound_info_vlan_flag) <= data_i(esoc_dbus_packet_info_vlan_flag);
                                   data_transfer_state         <= transfer;
                                 
