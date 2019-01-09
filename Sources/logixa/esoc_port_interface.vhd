@@ -52,7 +52,7 @@ entity esoc_port_interface is
     mac_mdio             : inout  std_logic;
     outbound_data        : in     std_logic_vector(31 downto 0);
     outbound_data_read   : out    std_logic;
-    outbound_info        : in     std_logic_vector(15 downto 0);
+    outbound_info        : in     std_logic_vector(31 downto 0);
     outbound_info_empty  : in     std_logic;
     outbound_info_read   : out    std_logic;
     reset                : in     std_logic;
@@ -163,7 +163,7 @@ architecture structure of esoc_port_interface is
       magic_wakeup         : in     STD_LOGIC;
       outbound_data        : in     std_logic_vector(31 downto 0);
       outbound_data_read   : out    std_logic;
-      outbound_info        : in     std_logic_vector(15 downto 0);
+      outbound_info        : in     std_logic_vector(31 downto 0);
       outbound_info_empty  : in     std_logic;
       outbound_info_read   : out    std_logic;
       reset                : in     STD_LOGIC;

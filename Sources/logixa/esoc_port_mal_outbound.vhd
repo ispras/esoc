@@ -44,7 +44,7 @@ entity esoc_port_mal_outbound is
     force_vlan_default_out : in     std_logic;
     outbound_data          : in     std_logic_vector(31 downto 0);
     outbound_data_read     : out    std_logic;
-    outbound_info          : in     std_logic_vector(15 downto 0);
+    outbound_info          : in     std_logic_vector(31 downto 0);
     outbound_info_empty    : in     std_logic;
     outbound_info_read     : out    std_logic;
     port_vlan_default      : in     std_logic_vector(15 downto 0);

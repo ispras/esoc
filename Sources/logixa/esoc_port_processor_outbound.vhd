@@ -42,7 +42,7 @@ entity esoc_port_processor_outbound is
     outbound_data_write  : out    std_logic;
     outbound_done_cnt    : out    std_logic;
     outbound_drop_cnt    : out    std_logic;
-    outbound_info        : out    std_logic_vector(15 downto 0);
+    outbound_info        : out    std_logic_vector(31 downto 0);
     outbound_info_write  : out    std_logic;
     outbound_vlan_id     : out    STD_LOGIC_VECTOR(11 downto 0);
     outbound_vlan_member : in     STD_LOGIC_VECTOR(0 downto 0);
