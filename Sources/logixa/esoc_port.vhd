@@ -85,7 +85,7 @@ architecture esoc_port of esoc_port is
   signal Net_6                   : std_logic;
   signal Net_7                   : std_logic_vector(31 downto 0);
   signal Net_8                   : std_logic;
-  signal Net_9                   : std_logic_vector(15 downto 0);
+  signal Net_9                   : std_logic_vector(31 downto 0);
   signal Net_10                  : std_logic;
   signal Net_11                  : std_logic;
   signal inbound_data_read       : std_logic;
@@ -98,7 +98,7 @@ architecture esoc_port of esoc_port is
   signal Net_19                  : std_logic;
   signal search_port_stalled_net : std_logic;
   signal Net_22                  : std_logic;
-  signal outbound_info           : std_logic_vector(15 downto 0);
+  signal outbound_info           : std_logic_vector(31 downto 0);
   signal inbound_proc_data       : std_logic_vector(63 downto 0);
   signal outbound_data           : std_logic_vector(63 downto 0);
   signal inbound_proc_data_full  : std_logic;
@@ -128,7 +128,7 @@ architecture esoc_port of esoc_port is
       mac_mdio             : inout  std_logic;
       outbound_data        : in     std_logic_vector(31 downto 0);
       outbound_data_read   : out    std_logic;
-      outbound_info        : in     std_logic_vector(15 downto 0);
+      outbound_info        : in     std_logic_vector(31 downto 0);
       outbound_info_empty  : in     std_logic;
       outbound_info_read   : out    std_logic;
       reset                : in     std_logic;
@@ -172,7 +172,7 @@ architecture esoc_port of esoc_port is
       outbound_data        : out    std_logic_vector(63 downto 0);
       outbound_data_full   : in     std_logic;
       outbound_data_write  : out    std_logic;
-      outbound_info        : out    std_logic_vector(15 downto 0);
+      outbound_info        : out    std_logic_vector(31 downto 0);
       outbound_info_write  : out    std_logic;
       reset                : in     std_logic;
       search_eof           : out    std_logic;
@@ -207,13 +207,13 @@ architecture esoc_port of esoc_port is
       inbound_proc_info_read    : in     std_logic;
       outbound_port_data        : out    std_logic_vector(31 downto 0);
       outbound_port_data_read   : in     std_logic;
-      outbound_port_info        : out    std_logic_vector(15 downto 0);
+      outbound_port_info        : out    std_logic_vector(31 downto 0);
       outbound_port_info_empty  : out    std_logic;
       outbound_port_info_read   : in     std_logic;
       outbound_proc_data        : in     std_logic_vector(63 downto 0);
       outbound_proc_data_full   : out    std_logic;
       outbound_proc_data_write  : in     std_logic;
-      outbound_proc_info        : in     std_logic_vector(15 downto 0);
+      outbound_proc_info        : in     std_logic_vector(31 downto 0);
       outbound_proc_info_write  : in     std_logic;
       reset                     : in     std_logic);
   end component esoc_port_storage;

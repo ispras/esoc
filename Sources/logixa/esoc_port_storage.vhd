@@ -50,13 +50,13 @@ entity esoc_port_storage is
     inbound_proc_info_read    : in     std_logic;
     outbound_port_data        : out    std_logic_vector(31 downto 0);
     outbound_port_data_read   : in     std_logic;
-    outbound_port_info        : out    std_logic_vector(15 downto 0);
+    outbound_port_info        : out    std_logic_vector(31 downto 0);
     outbound_port_info_empty  : out    std_logic;
     outbound_port_info_read   : in     std_logic;
     outbound_proc_data        : in     std_logic_vector(63 downto 0);
     outbound_proc_data_full   : out    std_logic;
     outbound_proc_data_write  : in     std_logic;
-    outbound_proc_info        : in     std_logic_vector(15 downto 0);
+    outbound_proc_info        : in     std_logic_vector(31 downto 0);
     outbound_proc_info_write  : in     std_logic;
     reset                     : in     std_logic);
 end entity esoc_port_storage;
@@ -182,7 +182,7 @@ begin
       wrfull  => open,
       wrusedw => open);
 
-  u5: esoc_fifo_256x16
+  u5: esoc_fifo_256x32
     port map(
       aclr    => reset,
       data    => outbound_proc_info,
