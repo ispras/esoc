@@ -42,6 +42,8 @@ entity esoc_port_mal_outbound is
     ff_tx_sop              : out    STD_LOGIC;
     ff_tx_wren             : out    STD_LOGIC;
     force_vlan_default_out : in     std_logic;
+    alter_vlan_tag_out     : in     std_logic;
+    vlan_tag_present_out   : in     std_logic;
     outbound_data          : in     std_logic_vector(31 downto 0);
     outbound_data_read     : out    std_logic;
     outbound_info          : in     std_logic_vector(31 downto 0);

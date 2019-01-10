@@ -40,6 +40,8 @@ entity esoc_port_mal_control is
     ctrl_wrdata            : in     std_logic_vector(31 downto 0);
     force_vlan_default_in  : out    std_logic;
     force_vlan_default_out : out    std_logic;
+    alter_vlan_tag_out     : out    std_logic;
+    vlan_tag_present_out   : out    std_logic;
     magic_sleep_n          : out    STD_LOGIC := '1';
     magic_wakeup           : in     STD_LOGIC;
     port_vlan_default      : out    std_logic_vector(15 downto 0);
@@ -65,8 +67,10 @@ architecture esoc_port_mal_control of esoc_port_mal_control is
 constant reg_port_mal_vlan_ctrl_add: integer                                := 385;
 signal   reg_port_mal_vlan_ctrl: std_logic_vector(31 downto 0);
 constant reg_port_mal_vlan_ctrl_rst: std_logic_vector(31 downto 0)          := X"00000001";
-  alias 	 reg_port_mal_vlan_ctrl_force_out: std_logic is reg_port_mal_vlan_ctrl(31);
-  alias 	 reg_port_mal_vlan_ctrl_force_in : std_logic is reg_port_mal_vlan_ctrl(30);
+  alias 	 reg_port_mal_vlan_ctrl_force_out      : std_logic is reg_port_mal_vlan_ctrl(31);
+  alias 	 reg_port_mal_vlan_ctrl_force_in       : std_logic is reg_port_mal_vlan_ctrl(30);
+  alias 	 reg_port_mal_vlan_ctrl_alter_tag_out  : std_logic is reg_port_mal_vlan_ctrl(29);
+  alias 	 reg_port_mal_vlan_ctrl_tag_present_out: std_logic is reg_port_mal_vlan_ctrl(28);
 
 constant reg_port_mal_stat_ctrl_add           : integer                        := 384;
 signal   reg_port_mal_stat_ctrl               : std_logic_vector(31 downto 0);
@@ -152,6 +156,8 @@ registers:  process(clk_control, reset)
             -- use register content
             force_vlan_default_out  <= reg_port_mal_vlan_ctrl_force_out;
             force_vlan_default_in   <= reg_port_mal_vlan_ctrl_force_in;
+            alter_vlan_tag_out      <= reg_port_mal_vlan_ctrl_alter_tag_out;
+            vlan_tag_present_out    <= reg_port_mal_vlan_ctrl_tag_present_out;
             
             port_vlan_default       <= reg_port_mal_vlan_ctrl(port_vlan_default'high downto 0);
             
