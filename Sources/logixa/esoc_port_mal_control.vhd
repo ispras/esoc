@@ -62,11 +62,11 @@ architecture esoc_port_mal_control of esoc_port_mal_control is
 ---------------------------------------------------------------------------------------------------------------
 -- registers
 ---------------------------------------------------------------------------------------------------------------
-constant reg_port_mal_vlan_default_add: integer                                := 385;
-signal reg_port_mal_vlan_default: std_logic_vector(31 downto 0);
-constant reg_port_mal_vlan_default_rst: std_logic_vector(31 downto 0)          := X"00000001";
-  alias 	 reg_port_mal_vlan_default_force_out: std_logic is reg_port_mal_vlan_default(31);
-  alias 	 reg_port_mal_vlan_default_force_in : std_logic is reg_port_mal_vlan_default(30);
+constant reg_port_mal_vlan_ctrl_add: integer                                := 385;
+signal   reg_port_mal_vlan_ctrl: std_logic_vector(31 downto 0);
+constant reg_port_mal_vlan_ctrl_rst: std_logic_vector(31 downto 0)          := X"00000001";
+  alias 	 reg_port_mal_vlan_ctrl_force_out: std_logic is reg_port_mal_vlan_ctrl(31);
+  alias 	 reg_port_mal_vlan_ctrl_force_in : std_logic is reg_port_mal_vlan_ctrl(30);
 
 constant reg_port_mal_stat_ctrl_add           : integer                        := 384;
 signal   reg_port_mal_stat_ctrl               : std_logic_vector(31 downto 0);
@@ -93,7 +93,7 @@ registers:  process(clk_control, reset)
             begin
               if reset = '1' then
               
-                reg_port_mal_vlan_default <= reg_port_mal_vlan_default_rst;
+                reg_port_mal_vlan_ctrl <= reg_port_mal_vlan_ctrl_rst;
               
                 -- all ports have weight 1 after reset
                 reg_port_mal_stat_ctrl <= reg_port_mal_stat_ctrl_rst;
@@ -117,7 +117,7 @@ registers:  process(clk_control, reset)
 	                if ctrl_rd = '1' then
 	                	-- Check register address and provide data when addressed
 	                  case to_integer(unsigned(ctrl_address))- esoc_port_nr * esoc_port_base_offset is
-                      when reg_port_mal_vlan_default_add  =>  ctrl_rddata_i <= reg_port_mal_vlan_default;
+                      when reg_port_mal_vlan_ctrl_add     =>  ctrl_rddata_i <= reg_port_mal_vlan_ctrl;
                                                               ctrl_wait_i <= '0';
                                                                         
                       when reg_port_mal_stat_ctrl_add     =>  ctrl_rddata_i <= reg_port_mal_stat_ctrl;
@@ -132,7 +132,7 @@ registers:  process(clk_control, reset)
                   elsif ctrl_wr = '1' then
                   	-- Check address and accept data when addressed
                   	case to_integer(unsigned(ctrl_address))- esoc_port_nr * esoc_port_base_offset is
-                      when reg_port_mal_vlan_default_add => reg_port_mal_vlan_default <= ctrl_wrdata;
+                      when reg_port_mal_vlan_ctrl_add    =>  reg_port_mal_vlan_ctrl <= ctrl_wrdata;
                                                             ctrl_wait_i <= '0';
                       
                       when reg_port_mal_stat_ctrl_add    =>  reg_port_mal_stat_ctrl <= ctrl_wrdata;
@@ -150,14 +150,14 @@ registers:  process(clk_control, reset)
             ctrl_rddata     <= ctrl_rddata_i  when ctrl_bus_enable = '1' else (others => 'Z');
             
             -- use register content
-            force_vlan_default_out  <= reg_port_mal_vlan_default_force_out;    
-            force_vlan_default_in   <= reg_port_mal_vlan_default_force_in;
+            force_vlan_default_out  <= reg_port_mal_vlan_ctrl_force_out;
+            force_vlan_default_in   <= reg_port_mal_vlan_ctrl_force_in;
             
-            port_vlan_default       <= reg_port_mal_vlan_default(port_vlan_default'high downto 0);
+            port_vlan_default       <= reg_port_mal_vlan_ctrl(port_vlan_default'high downto 0);
             
             magic_sleep_n	          <= reg_port_mal_stat_ctrl_magic_sleep;
             xoff_gen    	          <= reg_port_mal_stat_ctrl_xoff_gen;
-				    xon_gen      	          <= reg_port_mal_stat_ctrl_xon_gen;
+            xon_gen      	          <= reg_port_mal_stat_ctrl_xon_gen;
         
 end architecture esoc_port_mal_control ; -- of esoc_port_mal_control
 
