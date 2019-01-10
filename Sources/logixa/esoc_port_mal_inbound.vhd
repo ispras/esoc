@@ -72,6 +72,7 @@ architecture esoc_port_mal_inbound of esoc_port_mal_inbound is
 -- signals
 ---------------------------------------------------------------------------------------------------------------
 signal ff_rx_counter: integer range 2**esoc_inbound_info_length_size-1 downto 0;
+signal ff_rx_skipped: integer range 2**esoc_inbound_info_length_size-1 downto 0;
 
 signal boundary64: std_logic; 
 signal boundary64_write: std_logic; 
@@ -95,6 +96,7 @@ infoheader: process(clk_control, reset)
                 inbound_data_write      <= '0';
                 
                 ff_rx_counter           <= 0;
+                ff_rx_skipped           <= 0;
                 boundary64              <= '0';
                 boundary64_write        <= '0';
               
@@ -170,6 +172,11 @@ infoheader: process(clk_control, reset)
                                         inbound_info(esoc_inbound_info_vlan_tci+15 downto esoc_inbound_info_vlan_tci) <= ff_rx_data(15 downto 0);
                                         inbound_info(esoc_inbound_info_vlan_flag) <= '1';
                                       end if;
+
+                                      -- strip VLAN tag
+                                      inbound_data_write <= '0';
+                                      boundary64 <= boundary64;
+                                      ff_rx_skipped <= 4;
                                     
                                     -- untagged packet
                                     else
@@ -188,7 +195,8 @@ infoheader: process(clk_control, reset)
                     when others =>  -- Write information in to fifo when packet is complete, data operation can start!
                                     if ff_rx_eop = '1' then
                                       ff_rx_counter    <= 0;
-                                      inbound_info(esoc_inbound_info_length+esoc_inbound_info_length_size-1 downto esoc_inbound_info_length) <= std_logic_vector(to_unsigned(ff_rx_counter + 4 - to_integer(unsigned(ff_rx_mod)),esoc_inbound_info_length_size));
+                                      ff_rx_skipped    <= 0;
+                                      inbound_info(esoc_inbound_info_length+esoc_inbound_info_length_size-1 downto esoc_inbound_info_length) <= std_logic_vector(to_unsigned(ff_rx_counter - ff_rx_skipped + 4 - to_integer(unsigned(ff_rx_mod)),esoc_inbound_info_length_size));
                                       inbound_info_write <= '1';
                                       boundary64_write <= not(boundary64);
                                     end if;
