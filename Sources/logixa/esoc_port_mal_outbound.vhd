@@ -76,10 +76,12 @@ signal ff_tx_byte_counter: integer range 2**esoc_outbound_info_length_size-1 dow
 signal ff_tx_word_counter: integer range ((2**esoc_outbound_info_length_size)/4)-1 downto 0;
 
 signal outbound_data_read_enable: std_logic;
+signal outbound_data_read_pause: std_logic;
 signal outbound_data_read_dummy: std_logic;
 signal outbound_data_modify_enable: std_logic;
 signal outbound_data_modify: std_logic_vector(outbound_data'high downto 0);
 
+signal outbound_info_vlan_tci : std_logic_vector(15 downto 0);
 signal outbound_info_vlan_flag: std_logic;
 
 signal boundary64: std_logic;
@@ -101,6 +103,7 @@ capture:    process(clk_control, reset)
                 ff_tx_byte_counter <= 0;
                 ff_tx_word_counter <= 0;
                 
+                outbound_info_vlan_tci    <= (others => '0');
                 outbound_info_vlan_flag   <= '0';
                 
                 outbound_data_modify_enable <= '0';
@@ -109,6 +112,7 @@ capture:    process(clk_control, reset)
                 outbound_info_read        <= '0';
                 outbound_data_read_dummy   <= '0';
                 outbound_data_read_enable <= '0';
+                outbound_data_read_pause  <= '0';
                 
                 boundary64    <= '0';
               
@@ -117,6 +121,7 @@ capture:    process(clk_control, reset)
                 outbound_info_read          <= '0';
                 outbound_data_read_dummy    <= '0';
                 outbound_data_modify_enable <= '0';
+                outbound_data_read_pause    <= '0';
                 
                 case ff_tx_state is
                   when idle =>      -- create dummy read if the previous transaction does not end on a 64 bit boundary
@@ -130,7 +135,22 @@ capture:    process(clk_control, reset)
                                       outbound_info_read      <= '1';
                                       ff_tx_word_counter      <= 0;
                                       ff_tx_byte_counter      <= to_integer(unsigned(outbound_info(esoc_outbound_info_length+esoc_outbound_info_length_size-1 downto esoc_outbound_info_length)))-4;
-                                      outbound_info_vlan_flag <= outbound_info(esoc_outbound_info_vlan_flag);
+
+                                      if force_vlan_default_out = '0' then
+                                        -- use VLAN TCI from packet
+                                        outbound_info_vlan_tci <= outbound_info(esoc_outbound_info_vlan_tci+15 downto esoc_outbound_info_vlan_tci);
+                                      else
+                                        -- use port VLAN TCI
+                                        outbound_info_vlan_tci <= port_vlan_default;
+                                      end if;
+
+                                      if alter_vlan_tag_out = '0' then
+                                        -- use VLAN tag presence flag from packet
+                                        outbound_info_vlan_flag <= outbound_info(esoc_outbound_info_vlan_flag);
+                                      else
+                                        -- use VLAN tag presence flag from configuration register
+                                        outbound_info_vlan_flag <= vlan_tag_present_out;
+                                      end if;
                                       
                                       -- send packet to MAC or drop packet if an error is indicated, error can be packet in data FIFO not complete due to overrun
                                       if outbound_info(esoc_outbound_info_error_flag) = '0' then
@@ -180,9 +200,14 @@ capture:    process(clk_control, reset)
                                       --
                                       -- modify vlan id with default vlan id if packet is tagged and force default vlan is enabled
                                       if ff_tx_word_counter = 2 then
-                                        if outbound_info_vlan_flag = '1' and force_vlan_default_out = '1' then
+                                        if outbound_info_vlan_flag = '1' then
+                                          -- all VLAN tag
                                           outbound_data_modify_enable <= '1';
-                                          outbound_data_modify        <= esoc_ethernet_vlan_type & port_vlan_default;
+                                          outbound_data_modify        <= esoc_ethernet_vlan_type & outbound_info_vlan_tci;
+
+                                          outbound_data_read_pause    <= '1';
+                                          boundary64                  <= boundary64;
+                                          ff_tx_byte_counter          <= ff_tx_byte_counter;
                                         end if;
                                       end if;
                                       
@@ -209,6 +234,6 @@ capture:    process(clk_control, reset)
             ff_tx_err           <= '0';
             ff_tx_crc_fwd       <= '0';
             ff_tx_data          <= outbound_data when outbound_data_modify_enable = '0' else outbound_data_modify;
-            outbound_data_read  <= (ff_tx_rdy and outbound_data_read_enable) or outbound_data_read_dummy;
+            outbound_data_read  <= (ff_tx_rdy and outbound_data_read_enable and not(outbound_data_read_pause)) or outbound_data_read_dummy;
             
 end architecture esoc_port_mal_outbound ; -- of esoc_port_mal_outbound
