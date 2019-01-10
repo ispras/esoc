@@ -98,6 +98,8 @@ architecture esoc_port_mal of esoc_port_mal is
   signal port_vlan_default      : std_logic_vector(15 downto 0);
   signal force_vlan_default_in  : std_logic;
   signal force_vlan_default_out : std_logic;
+  signal alter_vlan_tag_out     : std_logic;
+  signal vlan_tag_present_out   : std_logic;
 
   component esoc_port_mal_control
     generic(
@@ -112,6 +114,8 @@ architecture esoc_port_mal of esoc_port_mal is
       ctrl_wrdata            : in     std_logic_vector(31 downto 0);
       force_vlan_default_in  : out    std_logic;
       force_vlan_default_out : out    std_logic;
+      alter_vlan_tag_out     : out    std_logic;
+      vlan_tag_present_out   : out    std_logic;
       magic_sleep_n          : out    STD_LOGIC := '1';
       magic_wakeup           : in     STD_LOGIC;
       port_vlan_default      : out    std_logic_vector(15 downto 0);
@@ -161,6 +165,8 @@ architecture esoc_port_mal of esoc_port_mal is
       ff_tx_sop              : out    STD_LOGIC;
       ff_tx_wren             : out    STD_LOGIC;
       force_vlan_default_out : in     std_logic;
+      alter_vlan_tag_out     : in     std_logic;
+      vlan_tag_present_out   : in     std_logic;
       outbound_data          : in     std_logic_vector(31 downto 0);
       outbound_data_read     : out    std_logic;
       outbound_info          : in     std_logic_vector(31 downto 0);
@@ -199,6 +205,8 @@ begin
       ctrl_wrdata            => ctrl_wrdata,
       force_vlan_default_in  => force_vlan_default_in,
       force_vlan_default_out => force_vlan_default_out,
+      alter_vlan_tag_out     => alter_vlan_tag_out,
+      vlan_tag_present_out   => vlan_tag_present_out,
       magic_sleep_n          => magic_sleep_n,
       magic_wakeup           => magic_wakeup,
       port_vlan_default      => port_vlan_default,
@@ -246,6 +254,8 @@ begin
       ff_tx_sop              => ff_tx_sop,
       ff_tx_wren             => ff_tx_wren,
       force_vlan_default_out => force_vlan_default_out,
+      alter_vlan_tag_out     => alter_vlan_tag_out,
+      vlan_tag_present_out   => vlan_tag_present_out,
       outbound_data          => outbound_data,
       outbound_data_read     => outbound_data_read,
       outbound_info          => outbound_info,
