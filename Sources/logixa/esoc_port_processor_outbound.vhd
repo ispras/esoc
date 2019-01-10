@@ -141,7 +141,11 @@ dbus: process(clk_data, reset)
                               -- entity. Note: a part of the packet is yet stored, so calculate the number of stored bytes and do not use only
                               -- the packet length that is sent by the source.
                               if outbound_data_full = '1' or (outbound_vlan_member = "0" and outbound_vlan_member_check = '1') then
-                                outbound_info(esoc_outbound_info_length + esoc_outbound_info_length_size -1 downto esoc_outbound_info_length) <= std_logic_vector(to_unsigned(outbound_info_counter-8,esoc_outbound_info_length_size));
+                                if outbound_data_full = '1' then
+                                  outbound_info(esoc_outbound_info_length + esoc_outbound_info_length_size -1 downto esoc_outbound_info_length) <= std_logic_vector(to_unsigned(outbound_info_counter-8,esoc_outbound_info_length_size));
+                                else
+                                  outbound_info(esoc_outbound_info_length + esoc_outbound_info_length_size -1 downto esoc_outbound_info_length) <= std_logic_vector(to_unsigned(outbound_info_counter,esoc_outbound_info_length_size));
+                                end if;
                                 outbound_info(esoc_outbound_info_error_flag) <= '1';
                                 outbound_info_write   <= '1';
                                 outbound_drop_cnt     <= '1';
