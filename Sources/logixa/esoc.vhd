@@ -32,8 +32,9 @@ entity esoc is
     esoc_address       : in     std_logic_vector(15 downto 0);
     esoc_areset        : in     std_logic;
     esoc_boot_complete : out    std_logic;
-    esoc_clk           : in     std_logic;
+    esoc_clk_50m       : in     std_logic;
     esoc_clk_25m       : in     std_logic;
+    esoc_clk_bus       : out    std_logic;
     esoc_cs            : in     std_logic;
     esoc_data          : inout  std_logic_vector(31 downto 0);
     esoc_mdc           : out    std_logic_vector(esoc_port_count-1 downto 0);
@@ -368,11 +369,12 @@ begin
 
   u1: esoc_pll1_c4
     port map(
-      inclk0 => esoc_clk,
+      inclk0 => esoc_clk_50m,
       c0     => clk_control,
       c1     => clk_search,
       c2     => clk_data,
       locked => pll1_locked);
+  esoc_clk_bus <= clk_control;
 
   u3: esoc_pll2_c4
     port map(
