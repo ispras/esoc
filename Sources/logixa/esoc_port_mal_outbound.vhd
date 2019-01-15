@@ -120,8 +120,6 @@ capture:    process(clk_control, reset)
                 -- clear one-clock active signals
                 outbound_info_read          <= '0';
                 outbound_data_read_dummy    <= '0';
-                outbound_data_modify_enable <= '0';
-                outbound_data_read_pause    <= '0';
                 
                 case ff_tx_state is
                   when idle =>      -- create dummy read if the previous transaction does not end on a 64 bit boundary
@@ -168,6 +166,8 @@ capture:    process(clk_control, reset)
                   
                   when running =>   -- provide next data when ready is asserted (=acknowledge of current data)
                                     if ff_tx_rdy = '1' then
+                                      outbound_data_modify_enable <= '0';
+                                      outbound_data_read_pause    <= '0';
                                       --
                                       -- CONTROL THE ST INTERFACE TO MAC
                                       --
